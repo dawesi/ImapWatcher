@@ -1,0 +1,17 @@
+<project name="ImapWatcher Deploy Script" default="Deploy">
+	
+	<target name="Deploy">
+		
+		<input message="Where is ColdFusion's gateway directory?" addproperty="gatewayDir" defaultvalue="/Applications/JRun4/servers/cfusion/cfusion-ear/cfusion-war/WEB-INF/cfusion/gateway/lib" />
+
+		<echo message="Building jar 1..." />
+		<jar destfile="ImapWatcherGateway.jar" basedir="bin" />
+		<echo message="Building jar 2..." />
+		<jar destfile="${gatewayDir}/ImapWatcherGateway.jar" basedir="bin" />
+		
+		<!-- retart coldfusion -->
+		<echo message="Don't forget to restart CF." />
+				
+	</target>
+	
+</project>
