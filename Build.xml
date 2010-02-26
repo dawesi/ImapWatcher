@@ -14,4 +14,8 @@
 				
 	</target>
 	
+	<target name="zip">
+		<zip destfile="ImapWatcherGateway.zip" basedir="." />
+	</target>
+	
 </project>
