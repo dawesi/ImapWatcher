@@ -107,7 +107,6 @@ public class ImapWatcherGateway implements Gateway, MessageCountListener {
 	@Override
 	public void start() {
 		this.status = Gateway.STARTING;
-		this.shutdown = false;
 		
 		this.loggingEnabled = Boolean.parseBoolean(properties.getProperty("loggingEnabled"));
 		
@@ -122,7 +121,7 @@ public class ImapWatcherGateway implements Gateway, MessageCountListener {
             }
         };
         listenerThread = new Thread(r);
-        
+		this.shutdown = false;
         listenerThread.start();
 		
 		this.status = Gateway.RUNNING;
@@ -160,6 +159,9 @@ public class ImapWatcherGateway implements Gateway, MessageCountListener {
 				this.folder.idle();
 				//log("done idle.");
 			}
+			
+			log("IMAP Watcher shutting down.", true);
+			
 		} catch(AuthenticationFailedException e) {	
 			log("AuthenticationFailedException: " + e.toString(), true);
 			stop();
@@ -306,6 +308,18 @@ public class ImapWatcherGateway implements Gateway, MessageCountListener {
 		
 		// TODO Stopping to stop the gateway
 		log("Stopping Gateway");
+		
+		 // tell generator to stop
+        try
+        {
+        	this.folder.close(false);
+            listenerThread.interrupt();
+            listenerThread.join(10 * 1000); // ten seconds
+        }
+        catch (Exception e)
+        {
+            // ignore
+        }
 		
 		this.status = Gateway.STOPPED;
 		

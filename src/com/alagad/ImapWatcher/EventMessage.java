@@ -7,6 +7,7 @@ import javax.mail.Message;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.Message.RecipientType;
+import javax.mail.internet.InternetAddress;
 
 import coldfusion.eventgateway.Logger;
 
@@ -29,14 +30,14 @@ public class EventMessage {
 		
 		setSubject(message.getSubject());
 		log("get from");
-		setFrom(message.getFrom()[0].toString());
+		setFrom(((InternetAddress)message.getFrom()[0]).getAddress());
 		
 		log("get to");
 		int x;
 		Address to[] = message.getRecipients(RecipientType.TO);
 		if(to != null){
 			for(x=0 ; x < to.length ; x++){
-				this.to.add(to[x].toString());
+				this.to.add(((InternetAddress)to[x]).getAddress());
 			}
 		}
 		
@@ -44,7 +45,7 @@ public class EventMessage {
 		Address cc[] = message.getRecipients(RecipientType.CC);
 		if(cc != null){
 			for(x=0 ; x < cc.length ; x++){
-				this.cc.add(cc[x].toString());
+				this.cc.add(((InternetAddress)cc[x]).getAddress());
 			}
 		}
 		
